@@ -1,0 +1,40 @@
+{
+  "name": "jsp-js",
+  "version": "0.4.1",
+  "description": "render JSP to HTML",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "demo": "supervisor demo/test.js"
+  },
+  "author": "Guillaume Pasquet",
+  "contributors": [
+    {
+      "name": "luobotang"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThisPlace/jsp-js.git"
+  },
+  "keywords": [
+    "jsp-js",
+    "jsp",
+    "renderer",
+    "template"
+  ],
+  "bugs": {
+    "url": "https://github.com/ThisPlace/jsp-js/issues"
+  },
+  "homepage": "https://github.com/ThisPlace/jsp-js#readme",
+  "devDependencies": {
+    "eslint": "^4.6.1",
+    "express": "^4.14.0",
+    "mocha": "^4.0.1",
+    "supervisor": "^0.12.0"
+  },
+  "dependencies": {
+    "winston": "^2.4.0"
+  }
+}
