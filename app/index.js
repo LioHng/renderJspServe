@@ -1,7 +1,7 @@
-const path = require('path');
 const express = require('express');
-const fs = require('fs');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const htmlRouter = require('./html')
+// 导入常量
 const {
   baseUrl,
   commonPath,
@@ -16,7 +16,7 @@ const {
 } = require('./utils');
 
 const app = express();
-
+app.use('/page/sellcrm', htmlRouter)
 app.use(`${baseUrl}/css`, express.static(commonPath + '/css'));
 app.use(`${baseUrl}/js`, express.static(commonPath + '/js'));
 app.use(`${baseUrl}/images`, express.static(commonPath + '/images'));
@@ -75,7 +75,7 @@ const fun = createProxyMiddleware({
     //   [`^/${baseUrl}`]: '', // 去掉 /qqMap 前缀
     // },
     onProxyReq: (proxyReq, req, res) => {
-        console.log('Proxying request:', req.url);
+        console.log('ProxyIng request:', req.url);
     },
     onError: (err, req, res) => {
         console.error('Proxy error:', err);
@@ -83,15 +83,16 @@ const fun = createProxyMiddleware({
     },
 })
 
-console.log('fun', fun);
-
+const consoleProxyInfo = false
 app.use('/', (req, res, next) => {
-    console.log('req.url', req.url);
-    if (!req.url.startsWith('/socket.io')) {
-      console.log('代理了');
-        return fun(req, res, next);
-    }
-    next();
+  let isProxy = false;
+  if (!req.url.startsWith('/socket.io')) {
+    isProxy = true
+    consoleProxyInfo && console.log('req.url', req.url, 'isProxy', isProxy);
+    return fun(req, res, next);
+  }
+  consoleProxyInfo && console.log('req.url', req.url, 'isProxy', isProxy);
+  next();
 });
 
 

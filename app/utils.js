@@ -1,6 +1,6 @@
 const path = require("path")
 const JSPJs = require("../jsp-js").Renderer
-const { commonPath, jspPath, baseUrl } = require("./constant")
+const { commonPath, jspPath, baseUrl } = require("./constant.js")
 
 function getPath(p) {
   return path.join(__dirname, p)
@@ -37,16 +37,41 @@ function commonUrlScript(obj = {}) {
     </script>
   `
 }
+const str= `
+    function clh_extractFileName(url) {
+      // 创建 URL 对象
+      const urlObj = new URL(url);
+      
+      // 获取路径名部分
+      const pathname = urlObj.pathname;
+      
+      // 去掉路径名中的斜杠
+      const pathSegments = pathname.split('/').filter(segment => segment);
+      
+      // 获取路径的最后一部分
+      const lastSegment = pathSegments[pathSegments.length - 1];
+      
+      // 判断是否包含文件扩展名
+      const hasExtension = lastSegment.includes('.');
 
+      // 返回带扩展名的文件名或者没有扩展名的文件名
+      return hasExtension ? lastSegment : lastSegment;
+    }
+`
 function socketScript() {
   return `
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
-        socket.on('fileChanged', () => {
-            console.log('File changed, reloading page...');
-            location.reload();
-        });
+      eval(\`${str}\`)
+      const socket = io();
+      socket.on('fileChanged', (val) => {
+        console.log('val: ', val);
+        const thisPageName = clh_extractFileName(window.location.href);
+        if(thisPageName === val) {
+          location.reload();
+         console.log('thisPageName:' + thisPageName + '需要更新')
+        }
+      });
     </script>
     `
 }
