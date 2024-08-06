@@ -2,7 +2,8 @@ const http = require("http")
 const socketIo = require("socket.io")
 const app = require("./app/index.js")
 const { PORT } = require("./app/constant.js")
-const { listenFilesChange, openBrowserUrl, getLocalNetworkAddress }  = require('./app/nodeUtils.js')
+const { openBrowserUrl, getLocalNetworkAddress }  = require('./app/utils/nodeUtils.js')
+const { listenFilesChange } = require('./app/watch.js')
 const chalk = require("chalk");
 chalk.level = 1;
 
