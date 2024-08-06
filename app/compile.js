@@ -25,6 +25,25 @@ const JspIns = new JSPJs({
   }
 })
 
+
+function insertScriptAfterHtmlTag(str, scriptContent) {
+  // 查找 <html> 标签的结束位置
+  const htmlTagEndIndex = str.indexOf('>', str.indexOf('<html'));
+  if (htmlTagEndIndex === -1) {
+    return console.log(chalk.red('Error: 没有识别到html的位置'));
+  }
+  // 检查 <html> 标签后面是否有其他标签，如果有，则需要在这些标签之后插入
+  let nextTagStartIndex = str.indexOf('<', htmlTagEndIndex + 1);
+  let insertIndex = nextTagStartIndex;
+  // 如果没有其他标签紧随其后，则直接在 <html> 标签后插入
+  if (insertIndex === -1 || insertIndex > htmlTagEndIndex) {
+    insertIndex = htmlTagEndIndex + 1;
+  }
+  // 插入 <script> 标签
+  const result = str.slice(0, insertIndex) + scriptContent + str.slice(insertIndex);
+  return result;
+}
+
 function commonUrlScript(obj = {}) {
   let str = ""
   for (let k in obj) {
@@ -80,4 +99,5 @@ module.exports = {
   commonUrlScript,
   jspHtmlString,
   socketScript,
+  insertScriptAfterHtmlTag
 }

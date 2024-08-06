@@ -1,8 +1,8 @@
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const { baseUrl, commonPath, proxyTargetDomain } = require('./constant')
 const htmlRouter = require('./html')
 const jspRouter = require('./jsp')
-const { baseUrl, commonPath, } = require('./constant')
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(`${baseUrl}/static`, express.static(commonPath + '/static'));
 app.use(`${baseUrl}/fonts`, express.static(commonPath + '/fonts'));
 
 const fun = createProxyMiddleware({
-    target: 'http://hfadmin.ubox-takeout.cn',
+    target: proxyTargetDomain,
     changeOrigin: true,
     onProxyReq: (proxyReq, req, res) => {
         console.log('ProxyIng request:', req.url);

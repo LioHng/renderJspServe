@@ -2,15 +2,18 @@ const express = require('express');
 const {
   commonUrlScript,
   jspHtmlString,
-  socketScript
+  socketScript,
+  insertScriptAfterHtmlTag
 } = require('../compile');
 const { baseUrl } = require('../constant')
 const path = require('path');
 const router = express.Router();
 
+
 const genPageHtml = (filePath, globalParams = {}) => {
   const fileName = path.basename(filePath);
-  return commonUrlScript() + jspHtmlString(filePath, { adminUrl: baseUrl, ...globalParams }) + socketScript(fileName)
+  const htmlStr = insertScriptAfterHtmlTag(jspHtmlString(filePath, { adminUrl: baseUrl, ...globalParams }), commonUrlScript())
+  return  htmlStr + socketScript(fileName)
 };
 router.get('/login', (req, res) => {
   const html = genPageHtml('/user/login.jsp')
@@ -33,7 +36,7 @@ router.get('/wait_admin_confirm', (req, res) => {
 
 // /complaint/new_lis
 router.get('/complaintPage', (req, res) => {
-  const html = genPageHtml('/complaint/new_list.jsp')
+  const html = genPageHtml('/complaint/new_list.jsp',{ mslist: [], plist: [],clist: [] })
   res.send(html);
 });
 // /mobileCanteen/canteenManagerPage
