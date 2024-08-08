@@ -5,9 +5,9 @@ const { commonPath, sellerCommonPath, PlatformEnum } = require("./constant.js")
 const needRefreshExtPage = ['.html', '.jsp']
 const needRefreshExtTheirPage = ['.js', '.css']
 function listenFilesChange(opt) {
-  const { io, server, platformType } = opt
+  const { io, server, platformType = 1 } = opt
   // 监听 HTML 文件变化
-  const watchFileDir = platformType === PlatformEnum.admin ? commonPath : sellerCommonPath
+  const watchFileDir = platformType == PlatformEnum.admin ? commonPath : sellerCommonPath
   const watcher = chokidar.watch(watchFileDir, {
     ignored: /(^|[\/\\])\../, // 忽略点文件
     persistent: true

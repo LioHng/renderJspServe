@@ -31,7 +31,7 @@ const fun = createProxyMiddleware({
 })
 
 
-const consoleProxyInfo = true
+const consoleProxyInfo = false
 app.use('/', (req, res, next) => {
   let isProxy = false;
   if (!req.url.startsWith('/socket.io')) {

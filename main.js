@@ -33,7 +33,7 @@ handleServeListen(server, PORT)
 
 
 // 是否启动商家后台服务
-const isActivateSeller = true
+const isActivateSeller = false
 if(isActivateSeller) {
   require('./runningSeller.js')
 }
