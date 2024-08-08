@@ -15,6 +15,7 @@ const genPageHtml = (filePath, globalParams = {}) => {
   const htmlStr = insertScriptAfterHtmlTag(jspHtmlString(filePath, { adminUrl: baseUrl, ...globalParams }), commonUrlScript())
   return  htmlStr + socketScript(fileName)
 };
+router.get('/', (req, res) =>  res.redirect('/login'));
 router.get('/login', (req, res) => {
   const html = genPageHtml('/user/login.jsp')
   res.send(html);

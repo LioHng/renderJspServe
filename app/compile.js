@@ -1,30 +1,33 @@
 const path = require("path")
 const JSPJs = require("../jsp-js").Renderer
-const { commonPath, jspPath, baseUrl } = require("./constant.js")
+const { takeoutWeb,sellerTakeoutWeb,commonPath, jspPath, sellerCommonPath, PlatformEnum } = require("./constant.js")
 const { getPath }  = require ('./utils/index.js')
+const adminJspIns = new genJspIns()
+const sellerJspIns = new genJspIns(PlatformEnum.seller)
 
-const JspIns = new JSPJs({
-  root: [commonPath],
-  tags: {
-    include: {
-      bar() {
-        return "<h2>Baz</h2>"
+function  genJspIns(platformType = 1) {
+  return new JSPJs({
+    root: [platformType === 1 ? commonPath : sellerCommonPath],
+    tags: {
+      include: {
+        bar() {
+          return "<h2>Baz</h2>"
+        },
       },
     },
-  },
-  globals: {
-    name: "John Doe",
-    currentYear: new Date().getFullYear(),
-  },
-  hook: {
-    // <jsp:include page="/WEB-INF/views/jsp/common/commonUrl.jsp"></jsp:include>
-    beforeProcessPageText(pageText) {
-      pageText = pageText.replace(/<jsp:include\s*page="\/WEB-INF\/views\/jsp\/common\/commonUrl.jsp"\s*><\/jsp:include>/g, '')
-      return pageText.replace(/<jsp:include page="([^"]+)"><\/jsp:include>/g, '<%@ include file="$1" %>');
+    globals: {
+      name: "John Doe",
+      currentYear: new Date().getFullYear(),
+    },
+    hook: {
+      // <jsp:include page="/WEB-INF/views/jsp/common/commonUrl.jsp"></jsp:include>
+      beforeProcessPageText(pageText) {
+        pageText = pageText.replace(/<jsp:include\s*page="\/WEB-INF\/views\/jsp\/common\/commonUrl.jsp"\s*><\/jsp:include>/g, '')
+        return pageText.replace(/<jsp:include page="([^"]+)"><\/jsp:include>/g, '<%@ include file="$1" %>');
+      }
     }
-  }
-})
-
+  })
+}
 
 function insertScriptAfterHtmlTag(str, scriptContent) {
   // 查找 <html> 标签的结束位置
@@ -44,7 +47,7 @@ function insertScriptAfterHtmlTag(str, scriptContent) {
   return result;
 }
 
-function commonUrlScript(obj = {}) {
+function commonUrlScript(obj = {}, platform = 1) {
   let str = ""
   for (let k in obj) {
     let oriVal = obj[k];
@@ -52,9 +55,10 @@ function commonUrlScript(obj = {}) {
     str += `var ${k} = ${valStr};\n`
   }
   console.log('str',str);
+  const takeWeb = PlatformEnum.admin === platform ? takeoutWeb : sellerTakeoutWeb
   return `
     <script type="text/javascript">
-      var takeoutWeb ='http://hfadmin.ubox-takeout.cn';
+      var takeoutWeb ='${takeWeb}';
       var qiniuyunWeb = 'http://img.ubox-takeout.cn/';
       var mallQiniuyunWeb = 'http://img.mall.ubox-takeout.cn/';
       var mobileUrl = 'http://hefan.ubox-takeout.cn';
@@ -90,7 +94,8 @@ function amendJs(str) {
   return str
 }
 
-function jspHtmlString(path, opt) {
+function jspHtmlString(path, opt, platformType = 1) {
+  const JspIns = platformType === 1 ? adminJspIns : sellerJspIns
   const jspHtml = JspIns.render(jspPath + path, opt)
   return amendJs(jspHtml)
 }

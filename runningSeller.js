@@ -1,21 +1,18 @@
 const http = require("http")
 const socketIo = require("socket.io")
-const app = require("./app/index.js")
-const { PORT} = require("./app/constant.js")
+const sellerApp = require("./app/sellerApp.js")
+const {  sellerPORT, PlatformEnum } = require("./app/constant.js")
 const { openBrowserUrl, getLocalNetworkAddress }  = require('./app/utils/nodeUtils.js')
 const { listenFilesChange } = require('./app/watch.js')
 const chalk = require("chalk");
 chalk.level = 1;
 
-const server = http.createServer(app)
-const io = socketIo(server)
+console.log('[[====================================');
 
-io.on("connection", (socket) => {
-  socket.on("disconnect", () => {})
-  socket.on("chat message", (msg) => {})
-})
+const sellerServer = http.createServer(sellerApp)
+const sellerIo = socketIo(sellerServer)
 
-listenFilesChange({ io, server })
+listenFilesChange({ io:sellerIo, sellerServer, platformType: PlatformEnum.seller })
 
 function handleServeListen(serverIns, port) {
   serverIns.listen(port, () => {
@@ -29,11 +26,4 @@ function handleServeListen(serverIns, port) {
   })
 }
 
-handleServeListen(server, PORT)
-
-
-// 是否启动商家后台服务
-const isActivateSeller = true
-if(isActivateSeller) {
-  require('./runningSeller.js')
-}
+handleServeListen(sellerServer, sellerPORT)
