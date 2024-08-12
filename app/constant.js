@@ -6,6 +6,11 @@ const baseUrl = '/yfApi'
 const proxyTargetDomain = 'http://hfadmin.ubox-takeout.cn'
 const takeoutWeb = 'http://hfadmin.ubox-takeout.cn'
 const PORT = 9090
+  // 运营后台 - 自动登录的账号；若想登录其他账号，修改该账号密码 
+const adminAccount = {
+  account: 'ubox_waimai',
+  password: '2020403'
+}
 
 // 商家后台
 // D:\youfanJava\takeout-git\takeout-seller\src\main\webapp\WEB-INF\views\jsp\bill\all.jsp
@@ -35,5 +40,6 @@ module.exports = {
   sellerCommonPath,
   PlatformEnum,
   takeoutWeb,
-  sellerTakeoutWeb
+  sellerTakeoutWeb,
+  adminAccount
 }

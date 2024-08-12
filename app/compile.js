@@ -74,6 +74,11 @@ function socketScript(pagePage = 'individual') {
       const clh_serve_page = '${pagePage}';
       const socket = io();
       socket.on('fileChanged', (val) => {
+        console.log('val: ', val);
+        if(val === 'staticFile') {
+          location.reload();
+          console.log('staticFile需要更新')
+        }
         if(clh_serve_page === val) {
           location.reload();
           console.log('thisPageName:' + clh_serve_page + 'ws需要更新')
@@ -100,9 +105,21 @@ function jspHtmlString(path, opt, platformType = 1) {
   return amendJs(jspHtml)
 }
 
+function refreshCallBackStript(funCallBackStr) {
+  return `
+    <script type="text/javascript">
+      $(function() {
+        ${funCallBackStr}
+        console.log('刷新页面')
+      })
+    </script>
+  `
+}
+
 module.exports = {
   commonUrlScript,
   jspHtmlString,
   socketScript,
-  insertScriptAfterHtmlTag
+  insertScriptAfterHtmlTag,
+  refreshCallBackStript
 }

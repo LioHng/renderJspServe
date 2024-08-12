@@ -3,9 +3,11 @@ const {
   commonUrlScript,
   jspHtmlString,
   socketScript,
-  insertScriptAfterHtmlTag
+  insertScriptAfterHtmlTag,
+  refreshCallBackStript
 } = require('../compile');
 const { baseUrl } = require('../constant')
+const { getLoginStr } = require('../utils')
 const path = require('path');
 const router = express.Router();
 
@@ -17,7 +19,7 @@ const genPageHtml = (filePath, globalParams = {}) => {
 };
 router.get('/', (req, res) =>  res.redirect('/login'));
 router.get('/login', (req, res) => {
-  const html = genPageHtml('/user/login.jsp')
+  const html = genPageHtml('/user/login.jsp') + refreshCallBackStript(getLoginStr())
   res.send(html);
 });
 
@@ -42,7 +44,7 @@ router.get('/complaintPage', (req, res) => {
 });
 // /mobileCanteen/canteenManagerPage
 router.get('/canteenManagerPage', (req, res) => {
-  const html = genPageHtml('/mobileCanteen/canteen_manager.jsp')
+  const html = genPageHtml('/mobileCanteen/canteen_manager.jsp') + refreshCallBackStript(`createDialog()`)
   res.send(html);
 });
 

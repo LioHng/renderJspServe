@@ -13,12 +13,12 @@ function listenFilesChange(opt) {
     persistent: true
   });
   watcher.on('change', (filePath,stats) => {
-    console.log(`File ${path} has been changed`)
+    console.log(`File ${filePath} has been changed`)
     if(!stats) return 
     const extname = path.extname(filePath);
     const fileName = path.basename(filePath);
     if(!extname || !fileName) return
-    if(needRefreshExtTheirPage.includes(extname)) return io.emit("fileChanged", fileName)
+    if(needRefreshExtTheirPage.some(i => extname.includes(i))) return io.emit("fileChanged", 'staticFile')
     if (needRefreshExtPage.includes(extname)) {
       console.log('需要刷新页面: ' + fileName, extname);
       io.emit("fileChanged", fileName)

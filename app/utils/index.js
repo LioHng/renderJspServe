@@ -1,23 +1,25 @@
 const path = require("path")
-
+const { adminAccount }  = require('../constant.js')
 function getPath(p) {
   return path.join(__dirname, p)
 }
 
-function login() {
-  $.ajax({
-    url: "/login.do?account=ubox_waimai&password=2020403",
-    // url: "/login.do?account=fd2013&password=a111111",
-    type: "post",
-    dataType: "json",
-    success: function (result) {
-      console.log("result: ", result)
-      layer.msg("登录成功")
-    },
-    error: function () {
-      layer.msg("系统异常")
-    },
-  })
+function getLoginStr() {
+  const { account, password } = adminAccount
+  return `
+    $.ajax({
+      url: "/login.do?account=${account}&password=${password}",
+      type: "post",
+      dataType: "json",
+      success: function (result) {
+        console.log("result: ", result)
+        layer.msg("node服务器已帮您自动登录")
+      },
+      error: function () {
+        layer.msg("系统异常")
+      },
+    })
+  `
 }
 
 function sellLogin() {
@@ -50,4 +52,5 @@ function sellLogin() {
 
 module.exports = {
   getPath,
+  getLoginStr
 }
